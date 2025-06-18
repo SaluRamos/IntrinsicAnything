@@ -13,7 +13,7 @@ from PIL import Image
 from torchvision import transforms
 import torchvision
 from einops import rearrange
-from ldm.util import instantiate_from_config
+from intrinsic_anything.ldm.util import instantiate_from_config
 from datasets import load_dataset
 import pytorch_lightning as pl
 import copy
@@ -29,8 +29,8 @@ import math
 from torch.utils.data.distributed import DistributedSampler
 import glob
 import pickle
-from ldm.data.objaverse_rendered import get_rendered_objaverse_list_v0
-from ldm.data.decoder import ObjaverseDataDecoder, ObjaverseDecoerWDS, nodesplitter
+from intrinsic_anything.ldm.data.objaverse_rendered import get_rendered_objaverse_list_v0
+from intrinsic_anything.ldm.data.decoder import ObjaverseDataDecoder, ObjaverseDecoerWDS, nodesplitter
 
 from loguru import logger
 from torch import distributed as dist

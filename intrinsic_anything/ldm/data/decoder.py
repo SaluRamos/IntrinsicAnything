@@ -7,7 +7,7 @@ from PIL import Image
 import torchvision
 import cv2
 import matplotlib.pyplot as plt
-from ldm.util import instantiate_from_config
+from intrinsic_anything.ldm.util import instantiate_from_config
 import os
 import io
 import pickle
