@@ -11,10 +11,10 @@ import argparse
 from pytorch_lightning import seed_everything
 from PIL import Image
 import torch
-from models.operators import GaussialBlurOperator
-from models.utils import get_rank, synchronize, get_world_size
+from intrinsic_anything.operators import GaussialBlurOperator
+from intrinsic_anything.utils import get_rank, synchronize, get_world_size
 from torchvision.ops import masks_to_boxes
-from models.matfusion import MateralDiffusion
+from intrinsic_anything.matfusion import MateralDiffusion
 from loguru import logger
 from torchvision.transforms import Resize 
 seed_everything(0)
@@ -25,11 +25,9 @@ def set_loggers(level):
 
 def init_model(ckpt_path, ddim, gpu_id):
     # find config
-    configs = os.listdir(f'{ckpt_path}/configs')
-    model_config = [config for config in configs if "project.yaml" in config][0]
     sds_loss_class = MateralDiffusion(device=gpu_id, fp16=True,
-                        config=f'{ckpt_path}/configs/{model_config}',
-                        ckpt=f'{ckpt_path}/checkpoints/last.ckpt', vram_O=False, 
+                        config=f'weights/albedo/configs/albedo_project.yaml',
+                        ckpt=f'{ckpt_path}', vram_O=False, 
                         t_range=[0.001, 0.02], opt=None, use_ddim=ddim)
     return sds_loss_class
 
