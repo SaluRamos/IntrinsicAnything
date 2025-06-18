@@ -20,9 +20,9 @@ sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 sys.path.append("./models/")
 from loguru import logger
 
-from ldm.util import instantiate_from_config
-from ldm.models.diffusion.ddim import DDIMSampler
-from ldm.modules.diffusionmodules.util import extract_into_tensor
+from intrinsic_anything.ldm.util import instantiate_from_config
+from intrinsic_anything.ldm.models.diffusion.ddim import DDIMSampler
+from intrinsic_anything.ldm.modules.diffusionmodules.util import extract_into_tensor
 
 # load model
 def load_model_from_config(config, ckpt, device, vram_O=False, verbose=True):
