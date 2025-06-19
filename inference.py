@@ -23,11 +23,11 @@ def set_loggers(level):
     logger.remove()
     logger.add(sys.stderr, level=level)
 
-def init_model(ckpt_path, ddim, gpu_id):
+def init_model(ckpt_path, config_path, ddim, gpu_id):
     # find config
     sds_loss_class = MateralDiffusion(device=gpu_id, fp16=True,
-                        config=f'weights/albedo/configs/albedo_project.yaml',
-                        ckpt=f'{ckpt_path}', vram_O=False, 
+                        config=config_path,
+                        ckpt=ckpt_path, vram_O=False, 
                         t_range=[0.001, 0.02], opt=None, use_ddim=ddim)
     return sds_loss_class
 
@@ -93,7 +93,7 @@ def read_img(img_path, read_alpha=False):
 class InferenceModel():
     def __init__(self, input_dir, mask_dir, output_dir, guidance_dir, 
                  split_overlap, padding, split_hw, inference_padding,
-                 ckpt_path, use_ddim, gpu_id=0):
+                 ckpt_path, config_path, use_ddim, gpu_id=0):
         self.gpu_id = gpu_id
         self.split_overlap = split_overlap
         self.split_hw = split_hw
@@ -126,7 +126,7 @@ class InferenceModel():
                                                                      (self.all_inputs, self.all_outputs, self.all_guides))
             logger.info(f"Assigned Images: {len(self.all_inputs)} for GPU :{self.gpu_id}")
 
-        self.model = init_model(ckpt_path, use_ddim, gpu_id=gpu_id)
+        self.model = init_model(ckpt_path, config_path, use_ddim, gpu_id=gpu_id)
 
     def _get_padding_idx(self, image_size):
         crop_length = self.diffusion_size - self.inference_padding * 2
@@ -360,6 +360,7 @@ if __name__=="__main__":
 
     parser.add_argument('--model_dir', type=str, default='None',
                         help="Trained diffusion model directory")
+    parser.add_argument('--config_path', type=str, default='None')
     
     parser.add_argument('--ddim', type=int, default=200,
                         help="DDIM steps")
@@ -404,7 +405,8 @@ if __name__=="__main__":
                            split_overlap=args.splits_overlap, padding=args.padding,
                            inference_padding=args.inference_padding,
                            split_hw=[args.splits_vertical, args.splits_horizontal],
-                           ckpt_path=args.model_dir, 
+                           ckpt_path=args.model_dir,
+                           config_path=args.config_path,
                            use_ddim=True, gpu_id=get_rank())
     
     model.generation(dps_scale=args.guidance, uc_score=1, 
